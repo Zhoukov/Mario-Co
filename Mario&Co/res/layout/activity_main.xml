@@ -12,7 +12,24 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:drawable/btn_dropdown"
-    android:spinnerMode="dropdown" />
+    android:spinnerMode="dropdown" 
+    android:textColor="#000000"/>
 
+ <TextView 
+     android:id="@+id/text"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:layout_below="@+id/services"
+     android:text="" />
+    
+  <Button
+        android:id="@+id/selecteren"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="14dp"
+        android:text="Meer Informatie..." />
 
 </RelativeLayout>

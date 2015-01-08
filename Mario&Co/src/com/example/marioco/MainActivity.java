@@ -8,12 +8,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Spinner;
 
-public class MainActivity extends Activity {
 
-	Spinner spinner;
-	
+public class MainActivity extends Activity {	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

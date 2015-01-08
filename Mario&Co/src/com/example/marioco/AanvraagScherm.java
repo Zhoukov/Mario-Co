@@ -8,12 +8,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class ServiceScherm extends Activity {
+public class AanvraagScherm extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_service);
+        setContentView(R.layout.activity_aanvraag);
     }
 
 

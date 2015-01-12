@@ -1,9 +1,13 @@
 package com.example.marioco;
 
-import java.util.ArrayList; 
+import java.util.ArrayList;  
 import java.util.Arrays;
 import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import com.example.marioco.Preferences;
 
 import android.app.Activity; 
 import android.app.Fragment;
@@ -59,9 +63,15 @@ String gekozenservice;
 		selecteren = (Button) findViewById(R.id.selecteren);
 		selecteren.setOnClickListener(this);
 	
-		
-		
-	}
+		if(Preferences.getInstance(this) == null)
+			System.out.println("no instance of preferences");
+			String[] pref = Preferences.getInstance(this).getMainActivityPreferences();
+		if(pref[0] != null)
+		spinner.setSelection(Integer.parseInt(pref[0]));
+
+		}
+
+	
 	
 
 	@Override
@@ -89,6 +99,9 @@ String gekozenservice;
 	public void onItemSelected(AdapterView<?> parent, View view, int position,
 			   long id) {
 	
+		 String[] loc = { ""+position };
+		 Preferences.getInstance(this).updateMainActivityPreferences(loc);
+		
 		 switch(position){
 		 case 0: //Riolering
 			 System.out.println("Riolering");

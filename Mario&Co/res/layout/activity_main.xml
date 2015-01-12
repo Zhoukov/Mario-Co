@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context="com.example.marioco.MainActivity"
     tools:ignore="MergeRootFrame"
-    android:background="#ffffff">
+    android:background="#7B9CFF">
 
  <TextView 
      android:id="@+id/text"
@@ -31,9 +31,8 @@
       android:layout_alignParentLeft="true"
       android:layout_centerVertical="true"
       android:background="@android:drawable/btn_dropdown"
-      android:spinnerMode="dropdown"
-      android:textColor="#000000" />
-
+      android:spinnerMode="dropdown"/>
+  
   <ImageView
       android:id="@+id/imageView1"
       android:layout_width="wrap_content"

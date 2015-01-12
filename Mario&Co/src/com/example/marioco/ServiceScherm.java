@@ -1,7 +1,6 @@
 package com.example.marioco;
 
 
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -43,6 +42,8 @@ public class ServiceScherm extends Activity implements OnClickListener{
 	   this.titel = titel;
        titel.setText(gekozenservice);
        
+       System.out.println(gekozenservice);
+       
        TextView info = (TextView)findViewById(R.id.textView1);
        this.info = info;
        info.setText("LOREM IPSUM EEND");
@@ -67,7 +68,7 @@ public class ServiceScherm extends Activity implements OnClickListener{
         case R.id.bevestigen:
     		    		
     		Intent i = new Intent(this, AanvraagScherm.class );
-    		i.putExtra("gekozen", gekozenservice.toString());
+    		i.putExtra("gekozen", (String)gekozenservice);
     		startActivity(i);
 
     		finish();

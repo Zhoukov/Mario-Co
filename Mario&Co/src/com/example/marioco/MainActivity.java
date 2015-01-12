@@ -32,6 +32,7 @@ ArrayAdapter<String> adapter;
 List<String> list;
 TextView serviceinfo;
 Button selecteren;
+String gekozenservice;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,8 @@ Button selecteren;
 		selecteren = (Button) findViewById(R.id.selecteren);
 		selecteren.setOnClickListener(this);
 	
+		
+		
 	}
 	
 
@@ -89,19 +92,19 @@ Button selecteren;
 		 switch(position){
 		 case 0: //Riolering
 			 System.out.println("Riolering");
-			 
-			serviceinfo.setText("Uw toiletproblemen in mum van tijd verholpen!");			
+			 gekozenservice = spinner.getSelectedItem().toString();
+			 serviceinfo.setText("Uw toiletproblemen in mum van tijd verholpen!");			
 								
 			break;
 		 case 1: //Dak Lekkages
 			 System.out.println("Dak Lekkages");
-			 
+			 gekozenservice = spinner.getSelectedItem().toString();
 			 serviceinfo.setText("Valt alles in het water? Wij helpen u uit de brand!");
 				
 			break;
 		 case 2: //Prinses In Nood
 			 System.out.println("Prinses In Nood");
-			 
+			 gekozenservice = spinner.getSelectedItem().toString();
 			 serviceinfo.setText("Wij vinden het juiste kasteel voor u!");
 				 break;
 		 }
@@ -119,7 +122,10 @@ Button selecteren;
 
 	@Override
 	public void onClick(View v) {
+		
+				
         Intent i = new Intent(MainActivity.this, ServiceScherm.class);
+        i.putExtra("gekozenservice",gekozenservice.toString());
         startActivity(i);
         finish();
 	}

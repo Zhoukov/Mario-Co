@@ -11,15 +11,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.TextView;
 
 
 public class ServiceScherm extends Activity implements OnClickListener{
 
 	Button bevestigen;
 	Button annuleren;
+	String gekozenservice;
+	TextView titel;
+	TextView info;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+   
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_service);
         
@@ -29,6 +34,22 @@ public class ServiceScherm extends Activity implements OnClickListener{
 		
        annuleren = (Button) findViewById(R.id.annuleren);
        annuleren.setOnClickListener(this);
+       
+       Intent hoofdscherm = getIntent();
+       gekozenservice = hoofdscherm.getStringExtra("gekozenservice");
+       
+       
+       TextView titel = (TextView)findViewById(R.id.textView2);
+	   this.titel = titel;
+       titel.setText(gekozenservice);
+       
+       TextView info = (TextView)findViewById(R.id.textView1);
+       this.info = info;
+       info.setText("LOREM IPSUM EEND");
+       
+       
+
+       
     }
 
 
@@ -46,6 +67,7 @@ public class ServiceScherm extends Activity implements OnClickListener{
         case R.id.bevestigen:
     		    		
     		Intent i = new Intent(this, AanvraagScherm.class );
+    		i.putExtra("gekozen", gekozenservice.toString());
     		startActivity(i);
 
     		finish();

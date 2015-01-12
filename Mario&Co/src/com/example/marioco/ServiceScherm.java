@@ -1,19 +1,34 @@
 package com.example.marioco;
 
+
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 
 
-public class ServiceScherm extends Activity {
+public class ServiceScherm extends Activity implements OnClickListener{
 
+	Button bevestigen;
+	Button annuleren;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_service);
+        
+       bevestigen = (Button) findViewById(R.id.bevestigen);
+       bevestigen.setOnClickListener(this);
+		
+		
+       annuleren = (Button) findViewById(R.id.annuleren);
+       annuleren.setOnClickListener(this);
     }
 
 
@@ -22,6 +37,28 @@ public class ServiceScherm extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+    
+	@Override
+    public void onClick(View v) {
+		
+        switch(v.getId()){
+        case R.id.bevestigen:
+    		    		
+    		Intent i = new Intent(this, AanvraagScherm.class );
+    		startActivity(i);
+
+    		finish();
+        break;
+        case R.id.annuleren:
+        	Intent j = new Intent(this, MainActivity.class);
+        	startActivity(j);
+        	
+        	finish();
+        break;
+        }
+		
+			
     }
 
        
@@ -36,14 +73,7 @@ public class ServiceScherm extends Activity {
        
 		return true;
 	}
-	@Override
-    public void onBackPressed()
-	{
-		Intent i = new Intent(this, MainActivity.class);
-		startActivity(i);
-		finish();
-       
-    }
+
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

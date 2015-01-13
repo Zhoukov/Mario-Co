@@ -92,7 +92,7 @@ private ServerCommunicator serverCommunicator;
 
         break;
         case R.id.annuleren:
-        	Intent j = new Intent(this, MainActivity.class);
+        	Intent j = new Intent(this, ServiceScherm.class);
         	startActivity(j);
         	
         	finish();
@@ -125,7 +125,7 @@ private ServerCommunicator serverCommunicator;
 	@Override
     public void onBackPressed()
 	{
-		Intent i = new Intent(this, MainActivity.class);
+		Intent i = new Intent(this, ServiceScherm.class);
 		startActivity(i);
 		finish();
        
@@ -138,7 +138,7 @@ private ServerCommunicator serverCommunicator;
 	        	
 	        	//System.out.println("UP Pressed");
 	        	
-	        	Intent i = new Intent(this, MainActivity.class);
+	        	Intent i = new Intent(this, ServiceScherm.class);
 	        	startActivity(i);
 	        	
 	        	finish();

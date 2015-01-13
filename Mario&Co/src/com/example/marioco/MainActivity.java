@@ -27,6 +27,8 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import server.ServiceData;
+
 
 public class MainActivity extends Activity implements OnItemSelectedListener, OnClickListener {	
 

@@ -1,7 +1,8 @@
 package com.example.marioco;
 
 
-import com.example.marioco.Preferences; 
+import com.example.marioco.Preferences;  
+
 
 import android.app.Activity; 
 import android.content.Intent;
@@ -27,6 +28,8 @@ EditText telefoon;
 EditText adres; 
 Button bevestigen;
 Button annuleren;
+private ServerCommunicator serverCommunicator;
+
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +82,13 @@ Button annuleren;
         switch(v.getId()){
         case R.id.bevestigen:
     		
-        	Toast.makeText(getApplicationContext(), "Uw service is verzonden, wij nemen zo snel mogelijk contact met u op.", Toast.LENGTH_SHORT).show();
+        	  String message = naam.getText().toString() + adres.getText().toString() + telefoon.getText().toString() + email.getText().toString() ;
+        	  System.out.println(message);
+        	  
+        	  
+        	  this.serverCommunicator = new ServerCommunicator( this, "94.211.183.172", 4444, message );
+        	  
+        	  Toast.makeText(getApplicationContext(), "Uw aanvraag is verzonden, wij nemen zo snel mogelijk contact met u op.", Toast.LENGTH_SHORT).show();
 
         break;
         case R.id.annuleren:

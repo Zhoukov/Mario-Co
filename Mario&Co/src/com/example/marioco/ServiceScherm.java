@@ -42,7 +42,7 @@ public class ServiceScherm extends Activity implements OnClickListener{
 	   this.titel = titel;
        titel.setText(gekozenservice);
        
-       System.out.println(gekozenservice);
+       //System.out.println(gekozenservice);
        
        TextView info = (TextView)findViewById(R.id.textView1);
        this.info = info;
@@ -66,10 +66,12 @@ public class ServiceScherm extends Activity implements OnClickListener{
 		
         switch(v.getId()){
         case R.id.bevestigen:
-    		    		
+    		    	
+        	
     		Intent i = new Intent(this, AanvraagScherm.class );
     		i.putExtra("gekozen", (String)gekozenservice);
     		startActivity(i);
+    		
 
     		finish();
         break;

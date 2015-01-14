@@ -45,6 +45,7 @@ private ServerCommunicator serverCommunicator;
         
         Intent aanvraagscherm = getIntent();
         gekozenservice = aanvraagscherm.getStringExtra("gekozen");
+        System.out.println(gekozen);
         
         TextView gekozen = (TextView)findViewById(R.id.textView1);
  	    this.gekozen = gekozen;
@@ -82,17 +83,17 @@ private ServerCommunicator serverCommunicator;
         switch(v.getId()){
         case R.id.bevestigen:
     		
-        	  String message = naam.getText().toString() + adres.getText().toString() + telefoon.getText().toString() + email.getText().toString() ;
+        	  String message = "De klant: " + naam.getText().toString() + " heeft gekozen voor de service: " + gekozenservice.toString() + ". " + "Adres: " + adres.getText().toString() + ", " + "Telefoon: " + telefoon.getText().toString() + ", " + "Email: " + email.getText().toString() + System.getProperty("line.separator");
         	  System.out.println(message);
         	  
         	  
-        	  this.serverCommunicator = new ServerCommunicator( this, "94.211.183.172", 4444, message );
+        	  this.serverCommunicator = new ServerCommunicator( this, "145.101.80.159", 4444, message );
         	  
         	  Toast.makeText(getApplicationContext(), "Uw aanvraag is verzonden, wij nemen zo snel mogelijk contact met u op.", Toast.LENGTH_SHORT).show();
 
         break;
         case R.id.annuleren:
-        	Intent j = new Intent(this, ServiceScherm.class);
+        	Intent j = new Intent(this, MainActivity.class);
         	startActivity(j);
         	
         	finish();

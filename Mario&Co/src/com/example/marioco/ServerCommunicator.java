@@ -21,7 +21,7 @@ public class ServerCommunicator implements Runnable
     private Thread thread;
 
     private String message;
-    private String ip = "94.211.183.172";
+    private String ip = "145.101.80.159";
     private int port = 4444;
 
 

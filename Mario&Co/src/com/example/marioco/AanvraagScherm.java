@@ -1,5 +1,6 @@
 package com.example.marioco;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -87,26 +88,26 @@ public class AanvraagScherm extends Activity implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.bevestigen:
 
+			JSONArray aanvraaglijst = new JSONArray();
 			JSONObject aanvraag = new JSONObject();
 			try {
-				aanvraag.put("Klantnaam: ", naam.getText().toString());
-				aanvraag.put("Gekozen service: ", gekozenservice.toString());
-				aanvraag.put("Adres: ", adres.getText().toString());
-				aanvraag.put("Telefoon: ", telefoon.getText().toString());
-				aanvraag.put("Email: ", email.getText().toString());
+				aanvraaglijst.put(new JSONObject().put("servicenaam",
+						gekozenservice.toString()));
+
+				JSONObject obj2 = new JSONObject();
+				obj2.put("kopernaam", naam.getText().toString());
+				obj2.put("koperadres", adres.getText().toString());
+				obj2.put("kopertelnr", telefoon.getText().toString());
+				obj2.put("koperemail", email.getText().toString());
+
+				aanvraaglijst.put(obj2);
+
+				aanvraag.put("aanvraag", aanvraaglijst);
+
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-//			String message = "De klant: " + naam.getText().toString()
-//					+ " heeft gekozen voor de service: "
-//					+ gekozenservice.toString() + ". " + "Adres: "
-//					+ adres.getText().toString() + ", " + "Telefoon: "
-//					+ telefoon.getText().toString() + ", " + "Email: "
-//					+ email.getText().toString()
-//					+ System.getProperty("line.separator");
-			//System.out.println(message);
 
 			this.serverCommunicator = new ServerCommunicator(this,
 					"145.101.82.75", 4444, aanvraag);

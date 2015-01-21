@@ -1,6 +1,6 @@
 package com.example.marioco;
 
-import java.util.ArrayList;  
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 import com.example.marioco.Preferences;
 
-import android.app.Activity; 
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -30,69 +30,65 @@ import android.widget.TextView;
 
 import server.ServiceData;
 
+public class MainActivity extends Activity implements OnItemSelectedListener,
+		OnClickListener {
 
-public class MainActivity extends Activity implements OnItemSelectedListener, OnClickListener {	
-
-Spinner spinner;
-ListView service;
-ArrayAdapter<String> adapter;
-List<String> list;
-TextView serviceinfo;
-Button selecteren;
-String gekozenservice;
-private ServerCommunicator serverCommunicator;
+	Spinner spinner;
+	ListView service;
+	ArrayAdapter<String> adapter;
+	List<String> list;
+	TextView serviceinfo;
+	Button selecteren;
+	String gekozenservice;
+	private ServerCommunicator serverCommunicator;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
-	    JSONObject service = new JSONObject();
-	    try {
-			service.put("informatiebeknopt", "informatiebeknopt");
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	    System.out.println(service);
-	    
-	    this.serverCommunicator = new ServerCommunicator(this,
-				"145.101.82.75", 4444, service);
-			    
-	    System.out.println(service);
-	    
-	    
+
+//		JSONObject service = new JSONObject();
+//		try {
+//			service.put("informatiebeknopt", "informatiebeknopt");
+//		} catch (JSONException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//
+//		this.serverCommunicator = new ServerCommunicator(this, "145.101.82.75",
+//				4444, service);
+
+		System.out.println(service);
+
 		list = new ArrayList<String>();
-	    list.add("Riolering");
-	    list.add("Dak Lekkage");
-	    list.add("Prinses In Nood");
-        
-	    Spinner spinner = (Spinner)findViewById(R.id.services);
-	    this.spinner = spinner;
-	    
-	    TextView serviceinfo = (TextView)findViewById(R.id.text);
-	    this.serviceinfo = serviceinfo;
-        
-        adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_spinner_item, list);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-		
-        spinner.setOnItemSelectedListener(this);
-        
+		list.add("Riolering");
+		list.add("Dak Lekkage");
+		list.add("Prinses In Nood");
+
+		Spinner spinner = (Spinner) findViewById(R.id.services);
+		this.spinner = spinner;
+
+		TextView serviceinfo = (TextView) findViewById(R.id.text);
+		this.serviceinfo = serviceinfo;
+
+		adapter = new ArrayAdapter<String>(getApplicationContext(),
+				android.R.layout.simple_spinner_item, list);
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		spinner.setAdapter(adapter);
+
+		spinner.setOnItemSelectedListener(this);
+
 		selecteren = (Button) findViewById(R.id.selecteren);
 		selecteren.setOnClickListener(this);
-	
-		if(Preferences.getInstance(this) == null)
+
+		if (Preferences.getInstance(this) == null)
 			System.out.println("no instance of preferences");
-			String[] pref = Preferences.getInstance(this).getMainActivityPreferences();
-		if(pref[0] != null)
-		spinner.setSelection(Integer.parseInt(pref[0]));
+		String[] pref = Preferences.getInstance(this)
+				.getMainActivityPreferences();
+		if (pref[0] != null)
+			spinner.setSelection(Integer.parseInt(pref[0]));
 
-		}
-
-	
-	
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -114,54 +110,50 @@ private ServerCommunicator serverCommunicator;
 		return super.onOptionsItemSelected(item);
 	}
 
-
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View view, int position,
-			   long id) {
-	
-		 String[] loc = { ""+position };
-		 Preferences.getInstance(this).updateMainActivityPreferences(loc);
-		
-		 switch(position){
-		 case 0: //Riolering
-			 System.out.println("Riolering");
-			 gekozenservice = spinner.getSelectedItem().toString();
-			 serviceinfo.setText("Uw toiletproblemen in mum van tijd verholpen!");			
-								
-			break;
-		 case 1: //Dak Lekkages
-			 System.out.println("Dak Lekkages");
-			 gekozenservice = spinner.getSelectedItem().toString();
-			 serviceinfo.setText("Valt alles in het water? Wij helpen u uit de brand!");
-				
-			break;
-		 case 2: //Prinses In Nood
-			 System.out.println("Prinses In Nood");
-			 gekozenservice = spinner.getSelectedItem().toString();
-			 serviceinfo.setText("Wij vinden het juiste kasteel voor u!");
-				 break;
-		 }
+			long id) {
 
-		 
-	 }
+		String[] loc = { "" + position };
+		Preferences.getInstance(this).updateMainActivityPreferences(loc);
 
+		switch (position) {
+		case 0: // Riolering
+			System.out.println("Riolering");
+			gekozenservice = spinner.getSelectedItem().toString();
+			serviceinfo
+					.setText("Uw toiletproblemen in mum van tijd verholpen!");
+
+			break;
+		case 1: // Dak Lekkages
+			System.out.println("Dak Lekkages");
+			gekozenservice = spinner.getSelectedItem().toString();
+			serviceinfo
+					.setText("Valt alles in het water? Wij helpen u uit de brand!");
+
+			break;
+		case 2: // Prinses In Nood
+			System.out.println("Prinses In Nood");
+			gekozenservice = spinner.getSelectedItem().toString();
+			serviceinfo.setText("Wij vinden het juiste kasteel voor u!");
+			break;
+		}
+
+	}
 
 	@Override
 	public void onNothingSelected(AdapterView<?> arg0) {
 		// TODO Auto-generated method stub
-		
-	}
 
+	}
 
 	@Override
 	public void onClick(View v) {
-		
-				
-        Intent i = new Intent(MainActivity.this, ServiceScherm.class);
-        i.putExtra("gekozenservice",gekozenservice.toString());
-        startActivity(i);
-        finish();
-	}
 
+		Intent i = new Intent(MainActivity.this, ServiceScherm.class);
+		i.putExtra("gekozenservice", gekozenservice.toString());
+		startActivity(i);
+		finish();
+	}
 
 }

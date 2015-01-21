@@ -13,19 +13,23 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.Activity;
 import android.util.Log;
 
 public class ServerCommunicator implements Runnable
 {
-    private AanvraagScherm activity;
+    private Activity activity;
     private Thread thread;
-
-    private String message;
-    private String ip = "145.101.80.159";
+    private JSONObject service;
+    private JSONObject message;
+    private String ip = "145.101.82.75";
     private int port = 4444;
 
 
-    public ServerCommunicator( AanvraagScherm activity, String ip, int port, String message )
+    public ServerCommunicator( Activity activity, String ip, int port, JSONObject message )
     {
         //we gebruiken de activity om de userinterface te updaten
         this.activity = activity;
@@ -51,9 +55,10 @@ public class ServerCommunicator implements Runnable
         {
             Socket serverSocket = new Socket();
             serverSocket.connect( new InetSocketAddress( this.ip, this.port ), 4000 );
-
+            
             //verzend een bericht naar de server
             this.sendMessage(message,serverSocket);
+            
 
 
             //gebruik de volgende twee methoden van de activity om informatie naar de UI thread (de activity) te sturen
@@ -79,7 +84,7 @@ public class ServerCommunicator implements Runnable
 
 
     //ook deze methoden kunnen niet naar de UI direct communiceren, hou hier rekening mee
-    private void sendMessage( String message, Socket serverSocket )
+    private void sendMessage( JSONObject message, Socket serverSocket )
     {
         OutputStreamWriter outputStreamWriter = null;
 

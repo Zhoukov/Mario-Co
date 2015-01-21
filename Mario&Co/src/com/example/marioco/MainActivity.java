@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.example.marioco.Preferences;
@@ -39,13 +40,30 @@ List<String> list;
 TextView serviceinfo;
 Button selecteren;
 String gekozenservice;
+private ServerCommunicator serverCommunicator;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-	    list = new ArrayList<String>();
+	    JSONObject service = new JSONObject();
+	    try {
+			service.put("informatiebeknopt", "informatiebeknopt");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	    System.out.println(service);
+	    
+	    this.serverCommunicator = new ServerCommunicator(this,
+				"145.101.82.75", 4444, service);
+			    
+	    System.out.println(service);
+	    
+	    
+		list = new ArrayList<String>();
 	    list.add("Riolering");
 	    list.add("Dak Lekkage");
 	    list.add("Prinses In Nood");

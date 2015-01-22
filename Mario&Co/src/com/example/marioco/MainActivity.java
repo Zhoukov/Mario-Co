@@ -46,11 +46,12 @@ public class MainActivity extends Activity implements OnItemSelectedListener,
 	static MainActivity activity;
 	TextView serviceinfo;
 	EditText ipadres;
-	public static String ip = "145.101.81.212";
+	public static String ip /*= "145.101.81.212"*/;
 	public static int port = 4444;
 	public String informatiebeknopt = null;
 	public static String serviceNaam;
-	Button button;
+	Button button1;
+	Button button2;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +86,8 @@ public class MainActivity extends Activity implements OnItemSelectedListener,
 			Toast.makeText(MainActivity.this,
 					"Verbinding met de server niet mogelijk.",
 					Toast.LENGTH_LONG).show();
+			
+			
 		} else {
 
 			String jsonFix = response.replace("null", "");
@@ -153,8 +156,11 @@ public class MainActivity extends Activity implements OnItemSelectedListener,
 
 		spinner.setOnItemSelectedListener(this);
 
-		button = (Button) findViewById(R.id.selecteren);
-		button.setOnClickListener(this);
+		button1 = (Button) findViewById(R.id.selecteren);
+		button1.setOnClickListener(this);
+//		
+//		button2 = 
+//		button2 =
 
 		if (Preferences.getInstance(this) == null)
 			System.out.println("no instance of preferences");

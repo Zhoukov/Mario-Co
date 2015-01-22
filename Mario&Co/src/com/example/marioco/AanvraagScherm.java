@@ -95,6 +95,7 @@ public class AanvraagScherm extends Activity implements OnClickListener {
 
 		switch (v.getId()) {
 		case R.id.bevestigen:
+			
 			plaatsBestelling();
 
 			break;
@@ -190,7 +191,7 @@ public class AanvraagScherm extends Activity implements OnClickListener {
 
 	@Override
 	public void onBackPressed() {
-		Intent i = new Intent(this, ServiceScherm.class);
+		Intent i = new Intent(this, MainActivity.class);
 		startActivity(i);
 		finish();
 
@@ -203,7 +204,7 @@ public class AanvraagScherm extends Activity implements OnClickListener {
 
 			// System.out.println("UP Pressed");
 
-			Intent i = new Intent(this, ServiceScherm.class);
+			Intent i = new Intent(this, MainActivity.class);
 			startActivity(i);
 
 			finish();

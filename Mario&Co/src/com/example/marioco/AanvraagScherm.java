@@ -1,5 +1,7 @@
 package com.example.marioco;
 
+import java.util.concurrent.ExecutionException;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,15 +25,19 @@ public class AanvraagScherm extends Activity implements OnClickListener {
 
 	TextView gekozen;
 	String gekozenservice;
-	EditText naam;
-	EditText email;
-	EditText telefoon;
-	EditText adres;
+	EditText naamVeld;
+	EditText emailVeld;
+	EditText telefoonVeld;
+	EditText adresVeld;
+    private static String naam;
+    private static String adres;
+    private static String telefoon;
+    private static String email;
 	Button bevestigen;
 	Button annuleren;
 	String ip = MainActivity.ip;
 	int port = MainActivity.port;
-	private ServerCommunicator serverCommunicator;
+	String responseFix;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -54,70 +60,42 @@ public class AanvraagScherm extends Activity implements OnClickListener {
 				+ gekozenservice
 				+ ", gelieve hier uw naam, adres, telefoonnummer en email in te vullen");
 
-		naam = (EditText) findViewById(R.id.naam);
+		naamVeld = (EditText) findViewById(R.id.naam);
 		// naam.setHint("Naam");
 
-		adres = (EditText) findViewById(R.id.adres);
+		adresVeld = (EditText) findViewById(R.id.adres);
 		// adres.setHint("Adres");
 
-		telefoon = (EditText) findViewById(R.id.telefoon);
+		telefoonVeld = (EditText) findViewById(R.id.telefoon);
 		// telefoon.setHint("0611111111");
 
-		email = (EditText) findViewById(R.id.email);
+		emailVeld = (EditText) findViewById(R.id.email);
 		// telefoon.setHint("E-mail");
 
 		String[] prefs = Preferences.getInstance(this)
 				.getCustomerInfoPreferences();
 		if (prefs[0] != null)
-			this.naam.setText(prefs[0]);
+			this.naamVeld.setText(prefs[0]);
 		if (prefs[1] != null)
-			this.adres.setText(prefs[1]);
+			this.adresVeld.setText(prefs[1]);
 		if (prefs[2] != null)
-			this.telefoon.setText(prefs[2]);
+			this.telefoonVeld.setText(prefs[2]);
 		if (prefs[3] != null)
-			this.email.setText(prefs[3]);
+			this.emailVeld.setText(prefs[3]);
 	}
 
 	@Override
 	public void onClick(View v) {
 
-		String[] newprefs = { this.naam.getText().toString(),
-				this.adres.getText().toString(),
-				this.telefoon.getText().toString(),
-				this.email.getText().toString() };
+		String[] newprefs = { this.naamVeld.getText().toString(),
+				this.adresVeld.getText().toString(),
+				this.telefoonVeld.getText().toString(),
+				this.emailVeld.getText().toString() };
 		Preferences.getInstance(this).updateCustomerInfoPreferences(newprefs);
 
 		switch (v.getId()) {
 		case R.id.bevestigen:
-
-			JSONArray aanvraaglijst = new JSONArray();
-			JSONObject aanvraag = new JSONObject();
-			try {
-				aanvraaglijst.put(new JSONObject().put("servicenaam",
-						gekozenservice.toString()));
-
-				JSONObject obj2 = new JSONObject();
-				obj2.put("kopernaam", naam.getText().toString());
-				obj2.put("koperadres", adres.getText().toString());
-				obj2.put("kopertelnr", telefoon.getText().toString());
-				obj2.put("koperemail", email.getText().toString());
-
-				aanvraaglijst.put(obj2);
-
-				aanvraag.put("aanvraag", aanvraaglijst);
-
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			this.serverCommunicator = new ServerCommunicator(this, ip, port,
-					aanvraag);
-
-			Toast.makeText(
-					getApplicationContext(),
-					"Aanvraag ontvangen, we nemen binnen 24 uur contact met u op!",
-					Toast.LENGTH_SHORT).show();
+			plaatsBestelling();
 
 			break;
 		case R.id.annuleren:
@@ -129,6 +107,70 @@ public class AanvraagScherm extends Activity implements OnClickListener {
 		}
 	}
 
+	 private void plaatsBestelling() {
+	        final TextView koperNaam = (TextView) findViewById(R.id.naam);
+	        final TextView koperAdres = (TextView) findViewById(R.id.adres);
+	        final TextView koperTelefoon = (TextView) findViewById(R.id.telefoon);
+	        final TextView koperEmail = (TextView) findViewById(R.id.email);
+
+	        naam = naamVeld.getText().toString();
+	        adres = adresVeld.getText().toString();
+	        telefoon = telefoonVeld.getText().toString();
+	        email = emailVeld.getText().toString();
+
+	        JSONObject bestelling = new JSONObject();
+	        JSONObject service = new JSONObject();
+	        JSONObject gegevens = new JSONObject();
+	        JSONArray bestelArray = new JSONArray();
+
+	        try {
+	            service.put("servicenaam", gekozenservice.toString());
+	            gegevens.put("kopernaam", naam);
+	            gegevens.put("koperadres", adres);
+	            gegevens.put("kopertelnr", telefoon);
+	            gegevens.put("koperemail", email);
+
+	            bestelArray.put(service);
+	            bestelArray.put(gegevens);
+
+	            bestelling.put("aanvraag", bestelArray);
+
+	        } catch (JSONException e) {
+
+	        }
+	        String response = null;
+
+	        try {
+	            try {
+	                // Dit IP adres moet IP adres van server zijn.
+	                response = new ServerCommunicator(ip,
+	                        port, bestelling.toString()).execute().get();
+	            } catch (ExecutionException e) {
+	                e.printStackTrace();
+	            }
+	        } catch (InterruptedException e1) {
+	            e1.printStackTrace();
+	        }
+	        if(response == null)
+	        {
+	            Toast.makeText(this, "Server is momenteel niet bereikbaar", Toast.LENGTH_LONG).show();
+	        }
+	        else{
+	            responseFix = response.replace("null", "");
+
+	            Toast.makeText(this, responseFix, Toast.LENGTH_LONG).show();
+	            bevestigen.setVisibility(View.GONE);
+
+	        }
+	        naam = koperNaam.getText().toString();
+	        adres = koperAdres.getText().toString();
+	        telefoon = koperTelefoon.getText().toString();
+	        email = koperEmail.getText().toString();
+
+	        annuleren.setText("Terugkeren naar Hoofdscherm");
+
+	    }
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

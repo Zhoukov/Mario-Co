@@ -3,6 +3,7 @@ package com.example.marioco;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,6 +16,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,6 +31,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import server.ServiceData;
 
@@ -38,15 +41,16 @@ public class MainActivity extends Activity implements OnItemSelectedListener,
 	Spinner spinner;
 	ListView service;
 	ArrayAdapter<String> adapter;
-	List<String> list;
+	static ArrayList<String> list;
+	static ArrayList<JSONObject> infoList;
+	static MainActivity activity;
 	TextView serviceinfo;
-	Button selecteren;
-	String gekozenservice;
 	EditText ipadres;
 	public static String ip = "145.101.81.212";
 	public static int port = 4444;
-	private ServerCommunicator serverCommunicator;
-	public String antwoord = serverCommunicator.response;
+	public String informatiebeknopt = null;
+	public static String serviceNaam;
+	Button button;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,56 +60,101 @@ public class MainActivity extends Activity implements OnItemSelectedListener,
 		ipadres = (EditText) findViewById(R.id.ipadres);
 		this.ip = ipadres.getText().toString();
 
-		JSONObject servicelijst = new JSONObject();
-		JSONObject riolering = new JSONObject();
-		JSONObject daklekkage = new JSONObject();
-		JSONObject prinses = new JSONObject();
-
+		list = new ArrayList<String>();
+		JSONObject jsonObject = new JSONObject();
 		try {
-			servicelijst.put("servicelijst", "");
-			riolering.put("informatiebeknopt", "Riolering");
-			daklekkage.put("informatiebeknopt", "Dak Lekkage");
-			prinses.put("informatiebeknopt", "Prinses In Nood");
+			jsonObject.put("servicelijst", "");
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		String response = null;
+		try {
+			try {
 
-		this.serverCommunicator = new ServerCommunicator(this, ip, port,
-				servicelijst);
+				response = new ServerCommunicator(ip, port,
+						jsonObject.toString()).execute().get();
 
-		this.serverCommunicator = new ServerCommunicator(this, ip, port,
-				riolering);
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			}
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+		if (response == null) {
 
-		this.serverCommunicator = new ServerCommunicator(this, ip, port,
-				daklekkage);
+			Toast.makeText(MainActivity.this,
+					"Verbinding met de server niet mogelijk.",
+					Toast.LENGTH_LONG).show();
+		} else {
 
-		this.serverCommunicator = new ServerCommunicator(this, ip, port,
-				prinses);
+			String jsonFix = response.replace("null", "");
 
-		String str = antwoord;
-		System.out.println("Antwoord van server: " + antwoord);
+			JSONArray JArray = null;
+			try {
+				JArray = new JSONArray(jsonFix);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
 
-		list = new ArrayList<String>();
-		list.add("Riolering");
-		list.add("Dak Lekkage");
-		list.add("Prinses In Nood");
+			JSONObject jObject = null;
+			String value = null;
+			list = new ArrayList<String>();
 
-		Spinner spinner = (Spinner) findViewById(R.id.services);
-		this.spinner = spinner;
+			for (int i = 0; i < JArray.length(); i++) {
+				try {
+					jObject = JArray.getJSONObject(i);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				try {
+					value = jObject.getString("naam");
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				list.add(value);
 
-		TextView serviceinfo = (TextView) findViewById(R.id.text);
-		this.serviceinfo = serviceinfo;
+			}
 
-		adapter = new ArrayAdapter<String>(getApplicationContext(),
-				android.R.layout.simple_spinner_item, list);
+			infoList = new ArrayList<JSONObject>();
+			JSONObject beknoptjObject = new JSONObject();
+			try {
+				for (int i = 0; i < list.size(); i++) {
+					beknoptjObject.put("informatiebeknopt", list.get(i));
+					try {
+						try {
+							informatiebeknopt = new ServerCommunicator(ip,
+									port, beknoptjObject.toString()).execute()
+									.get();
+
+						} catch (ExecutionException e) {
+							e.printStackTrace();
+						}
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+					String infoFix = informatiebeknopt.replace("null", "");
+					JSONObject fixedjObject = new JSONObject(infoFix);
+					infoList.add(fixedjObject);
+
+					Log.i("informatiebeknopt", infoFix);
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+
+		}
+
+		spinner = (Spinner) findViewById(R.id.services);
+
+		adapter = new ArrayAdapter<String>(MainActivity.this,
+				android.R.layout.simple_spinner_dropdown_item, list);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner.setAdapter(adapter);
 
 		spinner.setOnItemSelectedListener(this);
 
-		selecteren = (Button) findViewById(R.id.selecteren);
-		selecteren.setOnClickListener(this);
+		button = (Button) findViewById(R.id.selecteren);
+		button.setOnClickListener(this);
 
 		if (Preferences.getInstance(this) == null)
 			System.out.println("no instance of preferences");
@@ -137,49 +186,36 @@ public class MainActivity extends Activity implements OnItemSelectedListener,
 	}
 
 	@Override
-	public void onItemSelected(AdapterView<?> parent, View view, int position,
-			long id) {
+	public void onItemSelected(AdapterView<?> arg0, View arg1, int position,
+			long arg3) {
+		// TODO Auto-generated method stub
 
 		String[] loc = { "" + position };
-		Preferences.getInstance(this).updateMainActivityPreferences(loc);
+		Preferences.getInstance(MainActivity.this)
+				.updateMainActivityPreferences(loc);
 
-		switch (position) {
-		case 0: // Riolering
-			System.out.println("Riolering");
-			gekozenservice = spinner.getSelectedItem().toString();
-			serviceinfo
-					.setText("Uw toiletproblemen in mum van tijd verholpen!");
+		TextView beknopteinfo = (TextView) findViewById(R.id.text);
 
-			break;
-		case 1: // Dak Lekkages
-			System.out.println("Dak Lekkages");
-			gekozenservice = spinner.getSelectedItem().toString();
-			serviceinfo
-					.setText("Valt alles in het water? Wij helpen u uit de brand!");
+		try {
+			beknopteinfo.setText(infoList.get(position).getString(
+					"informatiebeknopt"));
+			serviceNaam = list.get(position);
 
-			break;
-		case 2: // Prinses In Nood
-			System.out.println("Prinses In Nood");
-			gekozenservice = spinner.getSelectedItem().toString();
-			serviceinfo.setText("Wij vinden het juiste kasteel voor u!");
-			break;
+		} catch (Exception e) {
+
 		}
 
+	}
+
+	public void onClick(View v) {
+		Intent i = new Intent(MainActivity.this, ServiceScherm.class);
+		i.putExtra("naam", serviceNaam.toString());
+		startActivity(i);
 	}
 
 	@Override
 	public void onNothingSelected(AdapterView<?> arg0) {
 		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onClick(View v) {
-
-		Intent i = new Intent(MainActivity.this, ServiceScherm.class);
-		i.putExtra("gekozenservice", gekozenservice.toString());
-		startActivity(i);
-		finish();
 	}
 
 }

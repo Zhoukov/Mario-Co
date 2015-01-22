@@ -29,6 +29,8 @@ public class AanvraagScherm extends Activity implements OnClickListener {
 	EditText adres;
 	Button bevestigen;
 	Button annuleren;
+	String ip = MainActivity.ip;
+	int port = MainActivity.port;
 	private ServerCommunicator serverCommunicator;
 
 	@Override
@@ -109,12 +111,12 @@ public class AanvraagScherm extends Activity implements OnClickListener {
 				e.printStackTrace();
 			}
 
-			this.serverCommunicator = new ServerCommunicator(this,
-					"145.101.82.75", 4444, aanvraag);
+			this.serverCommunicator = new ServerCommunicator(this, ip, port,
+					aanvraag);
 
 			Toast.makeText(
 					getApplicationContext(),
-					"Uw aanvraag is verzonden, wij nemen zo snel mogelijk contact met u op.",
+					"Aanvraag ontvangen, we nemen binnen 24 uur contact met u op!",
 					Toast.LENGTH_SHORT).show();
 
 			break;

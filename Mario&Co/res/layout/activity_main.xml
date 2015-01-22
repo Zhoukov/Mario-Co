@@ -23,16 +23,6 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="14dp"
         android:text="Meer Informatie..." />
-
-  <Spinner
-      android:id="@+id/services"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_alignParentLeft="true"
-      android:layout_centerVertical="true"
-      android:background="@android:drawable/btn_dropdown"
-      android:spinnerMode="dropdown"
-      android:textColor = "#000000"/>
   
   <ImageView
       android:id="@+id/imageView1"
@@ -52,5 +42,29 @@
       android:layout_marginLeft="15dp"
       android:layout_toRightOf="@+id/imageView1"
       android:text="Loodgietersbedrijf Mario&amp;Co is een loodgietersbedrijf dat leidingwerk repareert en aanlegt aan huis." />
+
+  <Spinner
+      android:id="@+id/services"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentLeft="true"
+      android:layout_below="@+id/imageView1"
+      android:background="@android:drawable/btn_dropdown"
+      android:spinnerMode="dropdown"
+      android:textColor="#000000" />
+
+  <EditText
+      android:id="@+id/ipadres"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_above="@+id/selecteren"
+      android:layout_alignParentLeft="true"
+      android:layout_marginTop="15dp"
+      android:ems="10"
+      android:hint="IP-Adres"
+      android:text="145.101.81.212" >
+
+      <requestFocus />
+  </EditText>
 
 </RelativeLayout>

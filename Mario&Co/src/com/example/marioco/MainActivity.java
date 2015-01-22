@@ -7,6 +7,7 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import com.example.marioco.Preferences;
 
@@ -24,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -40,25 +42,49 @@ public class MainActivity extends Activity implements OnItemSelectedListener,
 	TextView serviceinfo;
 	Button selecteren;
 	String gekozenservice;
+	EditText ipadres;
+	public static String ip = "145.101.81.212";
+	public static int port = 4444;
 	private ServerCommunicator serverCommunicator;
+	public String antwoord = serverCommunicator.response;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-//		JSONObject service = new JSONObject();
-//		try {
-//			service.put("informatiebeknopt", "informatiebeknopt");
-//		} catch (JSONException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//
-//		this.serverCommunicator = new ServerCommunicator(this, "145.101.82.75",
-//				4444, service);
+		ipadres = (EditText) findViewById(R.id.ipadres);
+		this.ip = ipadres.getText().toString();
 
-		System.out.println(service);
+		JSONObject servicelijst = new JSONObject();
+		JSONObject riolering = new JSONObject();
+		JSONObject daklekkage = new JSONObject();
+		JSONObject prinses = new JSONObject();
+
+		try {
+			servicelijst.put("servicelijst", "");
+			riolering.put("informatiebeknopt", "Riolering");
+			daklekkage.put("informatiebeknopt", "Dak Lekkage");
+			prinses.put("informatiebeknopt", "Prinses In Nood");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		this.serverCommunicator = new ServerCommunicator(this, ip, port,
+				servicelijst);
+
+		this.serverCommunicator = new ServerCommunicator(this, ip, port,
+				riolering);
+
+		this.serverCommunicator = new ServerCommunicator(this, ip, port,
+				daklekkage);
+
+		this.serverCommunicator = new ServerCommunicator(this, ip, port,
+				prinses);
+
+		String str = antwoord;
+		System.out.println("Antwoord van server: " + antwoord);
 
 		list = new ArrayList<String>();
 		list.add("Riolering");

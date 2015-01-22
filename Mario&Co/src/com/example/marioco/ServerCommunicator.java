@@ -5,6 +5,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -22,19 +23,20 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.util.Log;
 
-public class ServerCommunicator implements Runnable {
+public class ServerCommunicator  implements Runnable {
 	private Activity activity;
 	private Thread thread;
 	private JSONObject service;
 	private JSONObject message;
-	private String ip = "145.101.82.75";
+	private String ip = "145.101.81.212";
 	private int port = 4444;
+	public static String response;
 
 	public ServerCommunicator(Activity activity, String ip, int port,
 			JSONObject aanvraag) {
 		// we gebruiken de activity om de userinterface te updaten
 		this.activity = activity;
-
+		//klaarMetLaden = false;
 		// gegevens om naar de server te verbinden en een message te sturen
 		this.message = aanvraag;
 		this.ip = ip;
@@ -58,13 +60,34 @@ public class ServerCommunicator implements Runnable {
 			serverSocket.connect(new InetSocketAddress(this.ip, this.port),
 					4000);
 
-			
-			
 			// verzend een bericht naar de server
 			this.sendMessage(message, serverSocket);
-			
-			System.out.println(message);
 
+			InputStream input;
+
+			// zorgt voor een respons van de server
+			try {
+				input = serverSocket.getInputStream();
+				BufferedReader responseStreamReader = new BufferedReader(
+						new InputStreamReader(input));
+				String line = "";
+				StringBuilder stringBuilder = new StringBuilder();
+
+				while ((line = responseStreamReader.readLine()) != null) {
+					stringBuilder.append(line);
+				}
+				responseStreamReader.close();
+
+				this.response = stringBuilder.toString();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			response.replaceAll("null", "");
+			System.out.println("Response: " + response);
+			//klaarMetLaden = true;
+	
+			
+			
 			// gebruik de volgende twee methoden van de activity om informatie
 			// naar de UI thread (de activity) te sturen
 			// this.activity.setOntvangenBericht(
